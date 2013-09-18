@@ -12,6 +12,9 @@ import (
 )
 
 func CreateRepo(repoDir string) error {
+    //fileMode := (os.FileMode) 644
+    fileMode := os.ModePerm
+
     // Determine the path to the index file.
     indexFilePath := path.Join(repoDir, repo.IndexFileName)
 
@@ -24,7 +27,7 @@ func CreateRepo(repoDir string) error {
     // If the repo directory doesn't exist, create it.
     if _, err := os.Stat(repoDir); os.IsNotExist(err) {
         // Try to create the directory. If this fails, return an error.
-        createDirError := os.Mkdir(repoDir, os.ModePerm)
+        createDirError := os.Mkdir(repoDir, fileMode)
 
         if createDirError != nil {
             return createDirError
@@ -42,7 +45,7 @@ func CreateRepo(repoDir string) error {
     }
     
     // ...and write it to the index file.
-    writeError := ioutil.WriteFile(indexFilePath, jsonData, os.ModePerm)
+    writeError := ioutil.WriteFile(indexFilePath, jsonData, fileMode)
 
     if writeError != nil {
         return writeError

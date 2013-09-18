@@ -8,7 +8,8 @@ import (
 type commandError interface {
     Error() string
     GetExitCode() int
-    GetCause() int
+    GetCause() error
+    ShouldPrintUsage() bool
 }
 
 type commandErrorImpl struct {
@@ -22,8 +23,9 @@ type commandErrorImpl struct {
     cause error
 }
 
+
 // Implement the error interface.
-func (err *commandErrorImpl) Error() string {
+func (err commandErrorImpl) Error() string {
     if err.cause != nil {
         return fmt.Sprintf("%s\n    Caused by: %s", err.msg, err.cause)
     } else {
@@ -31,13 +33,18 @@ func (err *commandErrorImpl) Error() string {
     }
 }
 
-func (err *commandErrorImpl) GetExitCode() int {
+func (err commandErrorImpl) GetExitCode() int {
     return err.exitCode
 }
 
-func (err *commandErrorImpl) GetCause() error {
+func (err commandErrorImpl) GetCause() error {
     return err.cause
 }
+
+func (err commandErrorImpl) ShouldPrintUsage() bool {
+    return false
+}
+
 
 
 type commandFunc func(args ...string) commandError
@@ -47,17 +54,34 @@ type CommandInfo struct {
     CmdFunc commandFunc
     
     // String to display in the list of commands. Should not contain any newlines.
-    UsageSummary string
+    HelpSummary string
+
+    // Longer usage message to display with the command's help that tells the user how to use the command.
+    UsageMessage string
 }
 
+
+// Special command error that prints the command's usage info.
+type commandUsageError struct {
+    cmd CommandInfo
+}
+
+
+func (err commandUsageError) Error() string { return "Invalid arguments to command." }
+
+func (err commandUsageError) GetExitCode() int { return 1 }
+
+func (err commandUsageError) GetCause() error { return nil }
+
+func (err commandUsageError) ShouldPrintUsage() bool { return true }
 
 var commands map[string]CommandInfo
 
 func main() {
     // Initialize the command map.
     commands = map[string]CommandInfo {
-        "help": CommandInfo{CmdFunc: helpCommand, UsageSummary: "Shows a list of available commands and some basic information about them."},
-        "test": CommandInfo{CmdFunc: testCommand, UsageSummary: "This is a test command."},
+        "help": CommandInfo{CmdFunc: helpCommand, HelpSummary: "Shows a list of available commands and some basic information about them.", UsageMessage: "help"},
+        "create": CommandInfo{CmdFunc: createCommand, HelpSummary: "Creates a new, blank repository in the specified directory.", UsageMessage: "create REPO_DIR"},
     }
 
     // Get the command line arguments.
@@ -105,7 +129,7 @@ func helpCommand(args ...string) commandError {
     help := fmt.Sprintf("Usage: %s COMMAND [arg...]\n", os.Args[0])
     
     for cmdStr, cmdInfo := range commands {
-        help += fmt.Sprintf("    %-10.10s%s\n", cmdStr, cmdInfo.UsageSummary)
+        help += fmt.Sprintf("    %-10.10s%s\n", cmdStr, cmdInfo.HelpSummary)
     }
 
     fmt.Fprintf(os.Stderr, help)
@@ -113,8 +137,22 @@ func helpCommand(args ...string) commandError {
     return nil
 }
 
-func testCommand(args ...string) commandError {
-    fmt.Printf("It worked!")
-    return nil
+func createCommand(args ...string) commandError {
+    usage := commands["create"].UsageMessage
+
+    // Determine what directory to create the repository in.
+    if len(args) <= 0 {
+        return commandErrorImpl{fmt.Sprintf("Usage: %s\n", usage), 1, nil}
+    } else {
+        repoDir := args[0]
+
+        err := CreateRepo(repoDir)
+        
+        if err == nil {
+            return nil
+        } else {
+            return commandErrorImpl{"An error occurred.", 1, err}
+        }
+    }
 }
 
