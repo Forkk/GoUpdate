@@ -17,24 +17,23 @@ package repo
 // Structures that represent version data.
 
 type FileSource struct {
-    SourceType string
-    Url string
+	SourceType string
+	Url        string
 }
 
 type FileInfo struct {
-    Path string
-    Sources []FileSource
-    MD5 string
+	Path    string
+	Sources []FileSource
+	MD5     string
 }
 
 type Version struct {
-    ApiVersion int
-    Id int
-    Name string
-    Files []FileInfo
+	ApiVersion int
+	Id         int
+	Name       string
+	Files      []FileInfo
 }
 
 func NewVersion(id int, name string) Version {
-    return Version{0, id, name, []FileInfo {}}
+	return Version{0, id, name, []FileInfo{}}
 }
-

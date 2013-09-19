@@ -19,23 +19,22 @@ package repo
 const IndexFileName = "index.json"
 
 type VersionSummary struct {
-    Id int
-    Name string
+	Id   int
+	Name string
 }
 
 type ChannelSummary struct {
-    Id string
-    Name string
+	Id   string
+	Name string
 }
 
 type Index struct {
-    ApiVersion int
-    Versions []VersionSummary
-    Channels []ChannelSummary
+	ApiVersion int
+	Versions   []VersionSummary
+	Channels   []ChannelSummary
 }
 
 // Returns a new, blank index struct.
 func NewBlankIndex() Index {
-    return Index{ApiVersion: 0, Versions: []VersionSummary {}, Channels: []ChannelSummary {}}
+	return Index{ApiVersion: 0, Versions: []VersionSummary{}, Channels: []ChannelSummary{}}
 }
-
