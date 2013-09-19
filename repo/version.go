@@ -24,7 +24,7 @@ type FileSource struct {
 type FileInfo struct {
     Path string
     Sources []FileSource
-    Md5 string
+    MD5 string
 }
 
 type Version struct {
@@ -32,5 +32,9 @@ type Version struct {
     Id int
     Name string
     Files []FileInfo
+}
+
+func NewVersion(id int, name string) Version {
+    return Version{0, id, name, []FileInfo {}}
 }
 

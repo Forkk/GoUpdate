@@ -25,13 +25,13 @@ RepoMan requires the following information in order to generate and update repos
 
 
 Creating a Repository
----------------------
+=====================
 
 When creating a new repository, RepoMan will first create a blank index file in the repository directory and then run the update repository process (see "Updating a Repository" below).
 
 
 Updating a Repository
----------------------
+=====================
 
 When updating a repository, RepoMan will do the following.
 
@@ -41,4 +41,10 @@ When updating a repository, RepoMan will do the following.
 4. Determine whether or not each of the new update's files are the same (have the same MD5 sum) as the corresponding files in repository's latest version.
 5. Copy any of the new version's files that aren't the same as the previous latest version's files to `<update files directory>/<version ID>/<filename>`.
 6. Generate the new version JSON file. For any files which haven't changed since the last version, point their HTTP source's URL to the same URL as their corresponding files in the previous version.
+
+
+File Storage Directory
+----------------------
+
+To save disk space, RepoMan will try to re-use any files in the file storage directory that are the same as any of the files in the latest update. If there are already matching files in the file storage, RepoMan will point the HTTP source for their corresponding files in the latest update to those that are already in file storage instead of copying additional files to storage. To do this, RepoMan will keep a file in the file storage directory to keep track of the MD5 sums of all the files in the file storage directory. Whenever it updates the repository, RepoMan will go through all the files in the file storage directory and calculate the MD5 sum for any files that aren't listed in the MD5 cache.
 
