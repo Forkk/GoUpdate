@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package goupdate
+package repo
 
 // Structures that represent version data.
 

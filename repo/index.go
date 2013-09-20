@@ -12,13 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package goupdate
+package repo
 
-// Structures that contain information about a channel's repository.
+// Structures that represent a GoUpdate index file.
 
-type Channel struct {
-	ApiVersion    int
-	Id            string
-	Name          string
-	LatestVersion int
+const IndexFileName = "index.json"
+
+type VersionSummary struct {
+	Id   int
+	Name string
+}
+
+type ChannelSummary struct {
+	Id   string
+	Name string
+}
+
+type Index struct {
+	ApiVersion int
+	Versions   []VersionSummary
+	Channels   []ChannelSummary
+}
+
+// Returns a new, blank index struct.
+func NewBlankIndex() Index {
+	return Index{ApiVersion: 0, Versions: []VersionSummary{}, Channels: []ChannelSummary{}}
 }
