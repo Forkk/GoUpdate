@@ -23,18 +23,19 @@ type VersionSummary struct {
 	Name string
 }
 
-type ChannelSummary struct {
+type Channel struct {
 	Id   string
 	Name string
+	CurrentVersion int
 }
 
 type Index struct {
 	ApiVersion int
 	Versions   []VersionSummary
-	Channels   []ChannelSummary
+	Channels   []Channel
 }
 
 // Returns a new, blank index struct.
 func NewBlankIndex() Index {
-	return Index{ApiVersion: 0, Versions: []VersionSummary{}, Channels: []ChannelSummary{}}
+	return Index{ApiVersion: 0, Versions: []VersionSummary{}, Channels: []Channel{}}
 }
