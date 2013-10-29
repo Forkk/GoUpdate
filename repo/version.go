@@ -22,9 +22,11 @@ type FileSource struct {
 }
 
 type FileInfo struct {
-	Path    string
-	Sources []FileSource
-	MD5     string
+	Path       string
+	Sources    []FileSource
+	Executable bool
+	Perms      int
+	MD5        string
 }
 
 type Version struct {
