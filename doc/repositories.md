@@ -39,6 +39,8 @@ The version JSON file contains the following information.
 + `Name`, string version display name.
 + `Files`, list of objects containing information about files that this version contains. Each object contains the following information.
     - `Path`, the path that the file will be installed to, including the filename. Relative to the program's installation directory.
+	- `Executable`, boolean indicating whether or not the file is executable.
+	- `Perms`, any special permissions for the file (in typical Unix-ish format). This may also indicate whether the file is executable or not. If this field is specified, the `Executable` field should be ignored. If this field is not specified, the file's permissions should be default (644 or something).
     - `Sources`, an array of source objects containing information about where the file can be downloaded from in order of preference. The client should try the first source in this list that it supports and move to the next one if it fails. The update should only fail if either none of the sources for a file are supported, or all of the sources for the file fail to download successfully. See the section on source objects below.
     - `MD5`, the file's MD5 hash. Used to verify that the file was downloaded correctly. When updating, if the MD5 of an installed file on disk matches that of the same file in the version that the application is updating to, the file will not be downloaded.
 
