@@ -24,8 +24,8 @@ type VersionSummary struct {
 }
 
 type Channel struct {
-	Id   string
-	Name string
+	Id             string
+	Name           string
 	CurrentVersion int
 }
 
